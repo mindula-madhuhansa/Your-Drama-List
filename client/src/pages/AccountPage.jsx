@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { UserContext } from "../UserContext";
 import { Link, Navigate, useParams } from "react-router-dom";
 import axios from "axios";
-import ListsPage from "./ListsPage";
+import DramasPage from "./DramasPage.jsx";
 
 export default function AccountPage() {
   const [redirect, setRedirect] = useState(null);
@@ -48,8 +48,8 @@ export default function AccountPage() {
         <Link className={linkClasses("watchlist")} to={"/account/watchlist"}>
           My watchlist
         </Link>
-        <Link className={linkClasses("lists")} to={"/account/lists"}>
-          My lists
+        <Link className={linkClasses("dramas")} to={"/account/dramas"}>
+          My dramas
         </Link>
       </nav>
       {subpage === "profile" && (
@@ -60,7 +60,7 @@ export default function AccountPage() {
           </button>
         </div>
       )}
-      {subpage === "lists" && <ListsPage />}
+      {subpage === "dramas" && <DramasPage />}
     </div>
   );
 }
