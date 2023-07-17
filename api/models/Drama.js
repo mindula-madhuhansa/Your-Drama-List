@@ -6,10 +6,11 @@ const dramaSchema = new mongoose.Schema({
     year: Number,
     photos: [String],
     plot: String,
-    profile: [String],
+    genre: [String],
     extraInfo: String,
     episodes: Number,
-    aired: Number,
+    airingStarted: Date,
+    airingEnded: Date,
     duration: Number,
 });
 
