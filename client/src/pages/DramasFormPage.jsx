@@ -1,19 +1,42 @@
 import PhotosUploader from "../PhotosUploader.jsx";
 import Genres from "../Genres.jsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
+import AccountNav from "../AccountNav.jsx";
+import {Navigate, useParams} from "react-router-dom";
 
 export default function DramasFormPage(){
+    const {id} = useParams();
     const [title, setTitle] = useState('');
-    const [year, setYear] = useState('2023-01');
-    const [addedPhotos, setAddedPhotos] = useState('');
+    const [year, setYear] = useState('');
+    const [addedPhotos, setAddedPhotos] = useState([]);
     const [plot, setPlot] = useState('');
     const [genres, setGenres] = useState([]);
     const [extraInfo, setExtraInfo] = useState('');
-    const [episodes, setEpisodes] = useState('1');
-    const [airingStarted, setAiringStarted] = useState('2023-01-31')
-    const [airingEnded, setAiringEnded] = useState('2023-12-31')
-    const [duration, setDuration] = useState('60')
+    const [episodes, setEpisodes] = useState(1);
+    const [airingStarted, setAiringStarted] = useState('')
+    const [airingEnded, setAiringEnded] = useState('')
+    const [duration, setDuration] = useState(60)
+    const [redirect, setRedirect] = useState(false);
+
+    useEffect(() => {
+        if (!id){
+            return;
+        }
+        axios.get('/dramas/'+id).then(response => {
+            const {data} = response;
+            setTitle(data.title);
+            setYear(data.year);
+            setAddedPhotos(data.photos);
+            setPlot(data.plot);
+            setGenres(data.genre);
+            setExtraInfo(data.extraInfo);
+            setEpisodes(data.episodes);
+            setAiringStarted(data.airingStarted);
+            setAiringEnded(data.airingEnded);
+            setDuration(data.duration);
+        });
+    }, [id])
 
     function inputHeader(text) {
         return (
@@ -41,12 +64,20 @@ export default function DramasFormPage(){
         await axios.post('/dramas', {
             title, year, addedPhotos,
             plot, genres, extraInfo, episodes,
-            airingStarted, airingEnded, duration
+            airingStarted, airingEnded, duration,
         });
+        setRedirect(true)
+    }
+    
+    if (redirect){
+        return (
+            <Navigate to={'/account/dramas'}/>
+        )
     }
 
     return(
         <div>
+            <AccountNav/>
             <form onSubmit={addNewDrama}>
                 {preInput('Title', 'Add the drama or movie title.')}
                 <input type='text'
@@ -55,9 +86,9 @@ export default function DramasFormPage(){
                        onChange={e => setTitle(e.target.value)}/>
 
                 {preInput('Year', 'Select the drama or movie released year.')}
-                <input type='month'
+                <input type='text'
                        placeholder="year"
-                       min="1900-01"
+                       min="1900"
                        value={year}
                        onChange={e => setYear(e.target.value)}/>
 
@@ -79,8 +110,8 @@ export default function DramasFormPage(){
                           onChange={e => setExtraInfo(e.target.value)}/>
 
                 {preInput('Episodes', 'Enter the number of episodes.')}
-                <input type='number'
-                       min='1'
+                <input type='text'
+                       placeholder="1"
                        value={episodes}
                        onChange={e => setEpisodes(e.target.value)}/>
 
@@ -88,19 +119,21 @@ export default function DramasFormPage(){
                 <div className='grid gap-2 sm:grid-cols-3'>
                     <div>
                         <h3 className='mt-2'>Airing started</h3>
-                        <input type='date'
+                        <input type='text'
+                               placeholder="mm dd, yyyy"
                                value={airingStarted}
                                onChange={e => setAiringStarted(e.target.value)}/>
                     </div>
                     <div>
                         <h3 className='mt-2'>Airing ended</h3>
-                        <input type='date'
+                        <input type='text'
+                               placeholder="mm dd, yyyy"
                                value={airingEnded}
                                onChange={e => setAiringEnded(e.target.value)}/>
                     </div>
                     <div>
                         <h3 className='mt-2'>Duration (min)</h3>
-                        <input type='number'
+                        <input type='text'
                                value={duration}
                                onChange={e => setDuration(e.target.value)}/>
                     </div>
@@ -108,7 +141,6 @@ export default function DramasFormPage(){
                 <div>
                     <button className='primary my-4'>Save</button>
                 </div>
-
             </form>
         </div>
     );

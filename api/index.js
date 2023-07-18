@@ -119,12 +119,25 @@ app.post('/dramas', (req, res) => {
         if(err) throw err;
         const dramaDoc = await Drama.create({
             owner: userData.id,
-            title, year, addedPhotos,
+            title, year, photos: addedPhotos,
             plot, genre, extraInfo,
             airingStarted, airingEnded, duration
         });
         res.json(dramaDoc);
     });
+});
+
+app.get('/dramas', (req, res) => {
+    const {token} = req.cookies;
+    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+        const {id} = userData;
+        res.json( await Drama.find({owner: id}))
+    });
+});
+
+app.get('/dramas/:id', async (req, res) => {
+    const {id} = req.params;
+    res.json(await Drama.findById(id));
 });
 
 app.listen(4000);

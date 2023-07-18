@@ -1,22 +1,20 @@
-import {Link, useParams} from "react-router-dom";
+import {Link} from "react-router-dom";
+import AccountNav from "../AccountNav.jsx";
+import {useEffect, useState} from "react";
+import axios from "axios";
 
 export default function DramasPage() {
-    const {action} = useParams();
-
-    function linkClasses(type = null) {
-        let classes = "inline-flex gap-1 py-2 px-6 rounded-full";
-        if (type === false) {
-            classes += " bg-primary text-white rounded-full";
-        } else {
-            classes += ' bg-gray-200';
-        }
-        return classes;
-    }
-
+    const [dramas, setDramas] = useState([]);
+    useEffect(() => {
+        axios.get('/dramas').then(({data}) => {
+            setDramas(data);
+        });
+    }, []);
     return (
         <div>
-            {action !== 'new' && (
+            <AccountNav/>
                 <div className="text-center">
+                    list of all added dramas<br/>
                     <Link className="inline-flex gap-1 bg-primary text-white py-2 px-6 rounded-full"
                           to={'/account/dramas/new'}>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
@@ -28,7 +26,21 @@ export default function DramasPage() {
                         Add new drama
                     </Link>
                 </div>
-            )}
+            <div className="mt-4">
+                {dramas.length > 0 && dramas.map(drama => (
+                    <Link to={'/account/dramas/'+drama._id} className="flex cursor-pointer gap-4 bg-gray-200 p-4 rounded-2xl">
+                        <div className="w-48 h-72 bg-gray-300 grow shrink-0">
+                            {drama.photos.length > 0 && (
+                            <img src={drama.photos[0]} alt=""/>
+                            )}
+                        </div>
+                        <div className="grow-0 shrink">
+                            <h2 className="text-xl">{drama.title} ({drama.year})</h2>
+                            <p className="text-sm mt-2">{drama.plot}</p>
+                        </div>
+                    </Link>
+                ))}
+            </div>
         </div>
     );
 }
