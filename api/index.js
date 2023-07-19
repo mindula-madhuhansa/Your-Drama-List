@@ -112,22 +112,22 @@ app.post('/dramas', (req, res) => {
     const {token} = req.cookies;
     const {
         title, year, addedPhotos,
-        plot, genre, extraInfo,
-        airingStarted, airingEnded, duration
+        plot, genres, extraInfo, episodes,
+        airingStarted, airingEnded, duration, country,
     } = req.body;
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
         if(err) throw err;
         const dramaDoc = await Drama.create({
             owner: userData.id,
             title, year, photos: addedPhotos,
-            plot, genre, extraInfo,
-            airingStarted, airingEnded, duration
+            plot, genres, extraInfo, episodes,
+            airingStarted, airingEnded, duration, country,
         });
         res.json(dramaDoc);
     });
 });
 
-app.get('/dramas', (req, res) => {
+app.get('/user-dramas', (req, res) => {
     const {token} = req.cookies;
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
         const {id} = userData;
@@ -139,5 +139,30 @@ app.get('/dramas/:id', async (req, res) => {
     const {id} = req.params;
     res.json(await Drama.findById(id));
 });
+
+app.put('/dramas', async (req, res) => {
+    const {token} = req.cookies;
+    const {
+        id, title, year, addedPhotos,
+        plot, genres, extraInfo, episodes,
+        airingStarted, airingEnded, duration, country,
+    } = req.body;
+    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+        const dramaDoc = await Drama.findById(id);
+        if (userData.id === dramaDoc.owner.toString()){
+            dramaDoc.set({
+                title, year, photos: addedPhotos,
+                plot, genres, extraInfo, episodes,
+                airingStarted, airingEnded, duration, country,
+            })
+            await dramaDoc.save();
+            res.json('ok');
+        }
+    });
+})
+
+app.get('/dramas', async (req, res) => {
+    res.json( await Drama.find())
+})
 
 app.listen(4000);

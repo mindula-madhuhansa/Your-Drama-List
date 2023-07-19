@@ -3,15 +3,16 @@ const mongoose = require('mongoose');
 const dramaSchema = new mongoose.Schema({
     owner: {type: mongoose.Schema.Types.ObjectId, ref:'User'},
     title: String,
-    year: String,
+    year: Number,
     photos: [String],
     plot: String,
-    genre: [String],
+    genres: [String],
     extraInfo: String,
-    episodes: String,
+    episodes: Number,
     airingStarted: String,
     airingEnded: String,
-    duration: String,
+    duration: Number,
+    country: String,
 });
 
 const DramaModel = mongoose.model('Drama', dramaSchema);
