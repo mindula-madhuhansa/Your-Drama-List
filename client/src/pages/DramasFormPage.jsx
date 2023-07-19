@@ -13,10 +13,10 @@ export default function DramasFormPage(){
     const [plot, setPlot] = useState('');
     const [genres, setGenres] = useState([]);
     const [extraInfo, setExtraInfo] = useState('');
-    const [episodes, setEpisodes] = useState(1);
+    const [episodes, setEpisodes] = useState('');
     const [airingStarted, setAiringStarted] = useState('')
     const [airingEnded, setAiringEnded] = useState('')
-    const [duration, setDuration] = useState(60)
+    const [duration, setDuration] = useState('')
     const [redirect, setRedirect] = useState(false);
 
     useEffect(() => {
@@ -88,7 +88,6 @@ export default function DramasFormPage(){
                 {preInput('Year', 'Select the drama or movie released year.')}
                 <input type='text'
                        placeholder="year"
-                       min="1900"
                        value={year}
                        onChange={e => setYear(e.target.value)}/>
 

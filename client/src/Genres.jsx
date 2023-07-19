@@ -1,11 +1,9 @@
-// eslint-disable-next-line react/prop-types
 export default function Genres({selected, onChange}) {
     function handleCbClick(e){
         const {checked, name} = e.target;
         if (checked){
             onChange([...selected, name]);
         }else{
-            // eslint-disable-next-line react/prop-types
             onChange([...selected.filter(selectedName => selectedName !== name)]);
         }
     }
