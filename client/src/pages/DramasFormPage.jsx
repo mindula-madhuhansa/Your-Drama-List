@@ -8,7 +8,7 @@ import { Navigate, useParams } from "react-router-dom";
 export default function DramasFormPage() {
   const { id } = useParams();
   const [title, setTitle] = useState("");
-  const [year, setYear] = useState(2023);
+  const [year, setYear] = useState("");
   const [addedPhotos, setAddedPhotos] = useState([]);
   const [plot, setPlot] = useState("");
   const [genres, setGenres] = useState([]);
@@ -105,7 +105,7 @@ export default function DramasFormPage() {
 
         {preInput("Year", "Select the drama or movie released year.")}
         <input
-          type="number"
+          type="date"
           value={year}
           onChange={(e) => setYear(e.target.value)}
         />
@@ -145,8 +145,7 @@ export default function DramasFormPage() {
           <div>
             <h3 className="mt-2">Airing started</h3>
             <input
-              type="text"
-              placeholder="mm dd, yyyy"
+              type="date"
               value={airingStarted}
               onChange={(e) => setAiringStarted(e.target.value)}
             />
@@ -154,8 +153,7 @@ export default function DramasFormPage() {
           <div>
             <h3 className="mt-2">Airing ended</h3>
             <input
-              type="text"
-              placeholder="mm dd, yyyy"
+              type="date"
               value={airingEnded}
               onChange={(e) => setAiringEnded(e.target.value)}
             />

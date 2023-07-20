@@ -3,14 +3,14 @@ const mongoose = require('mongoose');
 const dramaSchema = new mongoose.Schema({
     owner: {type: mongoose.Schema.Types.ObjectId, ref:'User'},
     title: String,
-    year: Number,
+    year: Date,
     photos: [String],
     plot: String,
     genres: [String],
     extraInfo: String,
     episodes: Number,
-    airingStarted: String,
-    airingEnded: String,
+    airingStarted: Date,
+    airingEnded: Date,
     duration: Number,
     country: String,
 });

@@ -5,11 +5,11 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('./models/User.js');
 const Drama = require('./models/Drama.js');
+const Listing = require('./models/Listing.js');
 const cookieParser = require('cookie-parser');
 const imageDownloader = require('image-downloader');
 const multer = require('multer');
 const fs = require('fs');
-
 require('dotenv').config();
 const app = express();
 
@@ -25,6 +25,15 @@ app.use(cors({
 }));
 
 mongoose.connect(process.env.MONGO_URL)
+
+function getUserDataFromReq(req){
+    return new Promise((resolve, reject) => {
+        jwt.verify(req.cookies.token, jwtSecret, {}, async (err, userData) => {
+            if (err) throw err;
+            resolve(userData);
+        });
+    });
+};
 
 app.get('/test', (req, res) => {
     res.json('test ok');
@@ -163,6 +172,23 @@ app.put('/dramas', async (req, res) => {
 
 app.get('/dramas', async (req, res) => {
     res.json( await Drama.find())
+})
+
+app.post('/listings', async (req,res) => {
+    const userData = await getUserDataFromReq(req);
+    const {drama, watchingDate,} = req.body;
+     Listing.create({
+        drama, watchingDate, user:userData.id,
+    }).then((doc) => {
+        res.json(doc);
+    }).catch((err) => {
+        throw err;
+    })
+})
+
+app.get('/listings', async (req, res) => {
+  const userData = await getUserDataFromReq(req);
+  res.json( await Listing.find({user:userData.id}).populate('drama'))
 })
 
 app.listen(4000);

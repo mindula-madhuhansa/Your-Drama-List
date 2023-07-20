@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import AccountNav from "../AccountNav.jsx";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import DramaImg from "../DramaImg.jsx";
+import { format } from "date-fns";
 
 export default function DramasPage() {
   const [dramas, setDramas] = useState([]);
@@ -44,17 +46,11 @@ export default function DramasPage() {
               className="my-4 flex cursor-pointer gap-4 bg-gray-200 p-4 rounded-2xl"
             >
               <div className="flex w-48 h-72 bg-gray-300 grow shrink-0">
-                {drama.photos.length > 0 && (
-                  <img
-                    className="object-cover"
-                    src={"http://localhost:4000/uploads/" + drama.photos[0]}
-                    alt=""
-                  />
-                )}
+                <DramaImg drama={drama} />
               </div>
               <div className="grow-0 shrink">
                 <h2 className="text-xl">
-                  {drama.title} ({drama.year})
+                  {drama.title} ({format(new Date(drama.year), "yyyy")})
                 </h2>
                 <p className="text-sm mt-2">{drama.plot}</p>
               </div>
